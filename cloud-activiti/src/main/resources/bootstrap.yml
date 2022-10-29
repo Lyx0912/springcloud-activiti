@@ -1,0 +1,20 @@
+server:
+  port: 20009
+spring:
+  application:
+    name: cloud-activiti
+  cloud:
+    nacos:
+      # 注册中心
+      discovery:
+        server-addr: 127.0.0.1:8848
+      # 配置中心
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yaml
+        shared-configs[0]:
+          data-id: cloud-activiti.yaml
+          refresh: true
+logging:
+  level:
+    spring.: DEBUG

@@ -1,0 +1,21 @@
+server:
+  port: 20008
+
+spring:
+  application:
+    name: demo-storage
+  cloud:
+    nacos:
+      # 注册中心
+      discovery:
+        server-addr: http://127.0.01:8848
+      # 配置中心
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yaml
+        shared-configs[0]:
+          data-id: ams-common.yaml
+          refresh: true
+    alibaba:
+      seata:
+        tx-service-group: demo-storage

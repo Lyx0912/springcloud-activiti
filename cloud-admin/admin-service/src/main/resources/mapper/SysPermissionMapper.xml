@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyx.admin.ser.mapper.SysPermissionMapper">
+
+    <resultMap id="BaseResultMap" type="com.lyx.admin.ser.entity.SysPermission">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="menuId" column="menu_id" jdbcType="BIGINT"/>
+        <result property="urlPerm" column="url_perm" jdbcType="VARCHAR"/>
+        <collection property="roles" ofType="String" javaType="list">
+            <result column="code"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,name,menu_id,
+        url_perm,btn_perm,gmt_create,
+        gmt_modified
+    </sql>
+
+    <select id="listPermRoles" resultMap="BaseResultMap">
+        SELECT t1.id,
+               t1.NAME,
+               t1.menu_id,
+               t1.url_perm,
+               t3.CODE
+        FROM sys_permission t1
+                 LEFT JOIN sys_role_permission t2 ON t1.id = t2.permission_id
+                 LEFT JOIN sys_role t3 ON t2.role_id = t3.id
+    </select>
+
+</mapper>

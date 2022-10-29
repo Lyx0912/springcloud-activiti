@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.lyx.common.web.exception.GlobalExceptionHandler,\
+  com.lyx.common.web.feign.FeignConfig,\
+  com.lyx.common.web.sentinel.DefaultBlockExceptionHandler,\
+  com.lyx.common.web.sentinel.RequestOriginParserDefinition

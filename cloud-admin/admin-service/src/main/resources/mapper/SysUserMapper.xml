@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyx.admin.ser.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.lyx.admin.ser.entity.SysUser">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="BOOLEAN"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <collection property="roles" ofType="string" javaType="list">
+            <result column="roleCode"></result>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+                ,username,nickname,
+                gender,password,dept_id,
+                avatar,mobile,status,
+                email,gmt_create,gmt_modified,
+                deleted
+    </sql>
+
+    <resultMap id="UserAuthMap" type="com.lyx.admin.dto.UserAuthDTO">
+        <id property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
+        <collection property="roles" ofType="string" javaType="list">
+            <result column="roleCode"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getByUsername" resultMap="UserAuthMap">
+        select t1.id userId, t1.username, t1.nickname, t1.password, t1.status, t3.code roleCode
+                from sys_user t1,
+                sys_user_role t2,
+                sys_role t3
+                where t1.username = #{userName}
+                and t1.deleted = 0
+                and t1.id = t2.user_id
+                and t2.role_id = t3.id
+    </select>
+
+</mapper>

@@ -17,6 +17,8 @@ public enum ResultCode implements IResultCode, Serializable {
     SYSTEM_EXECUTION_ERROR("999999", "系统执行出错"),
     USERNAME_OR_PASSWORD_ERROR("A00100", "用户名或密码错误"),
     USER_NOT_EXIST("A00101", "用户不存在"),
+    PARAM_VALID_FAIL("A00102","参数校验异常"),
+    DATA_NOT_EXIST("A00102","数据不存在"),
     CLIENT_AUTHENTICATION_FAILED("A00212", "客户端认证失败"),
     ACCESS_UNAUTHORIZED("A00213", "未授权"),
     TOKEN_INVALID_OR_EXPIRED("A00214", "token非法或失效"),

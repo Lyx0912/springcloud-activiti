@@ -1,10 +1,10 @@
-package com.lyx.common.mp.handler;
+package com.lyx.admin.ser.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.lyx.common.web.utils.UserContext;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -23,8 +23,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", () -> new Date(), Date.class);
         this.strictInsertFill(metaObject, "updateTime", () -> new Date(), Date.class);
-        this.strictInsertFill(metaObject, "createBy", () -> new Long(0L), Long.class);
-        this.strictInsertFill(metaObject, "updateBy", () -> new Long(0L), Long.class);
+        this.strictInsertFill(metaObject, "createBy", () -> UserContext.getCurrentUserId(), Long.class);
+        this.strictInsertFill(metaObject, "updateBy", () -> UserContext.getCurrentUserId(), Long.class);
         System.out.println(metaObject);
     }
 
@@ -36,7 +36,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updateTime", () -> new Date(), Date.class);
-        this.strictUpdateFill(metaObject, "updateBy", () -> new Long(0L), Long.class);
+        this.strictUpdateFill(metaObject, "updateBy", () -> UserContext.getCurrentUserId(), Long.class);
     }
 
 }

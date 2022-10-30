@@ -19,4 +19,14 @@ public class GlobalConstants {
         * 默认密码
         */
      public static final String USER_DEFAULT_PASSWORD = "123456789";
+
+      /**
+        * 菜单根目录
+        */
+     public static final Long ROOT_MENU_ID = -1L;
+
+      /**
+        * 权限格式
+        */
+     public static final String ADMIN_URL_PERM = "%s:/%s%s";
 }

@@ -2,6 +2,9 @@ package com.lyx.admin.ser.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyx.admin.ser.entity.SysMenu;
+import com.lyx.admin.ser.entity.req.SaveMenuReq;
+import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
+import com.lyx.admin.ser.entity.vo.SysMenuVO;
 
 import java.util.List;
 
@@ -69,4 +72,34 @@ public interface ISysMenuService extends IService<SysMenu> {
     void updateMenuStatus(Long id, int status);
 
     List<Long> currentUser();
+
+     /**
+       * 构建菜单树
+       */
+    List<SysMenuVO> loadMenus();
+
+     /**
+       * 创建菜单
+       */
+    void createMenu(SaveMenuReq req);
+
+     /**
+       * 更新菜单
+       */
+    void updateMenu(SaveMenuReq req);
+
+     /**
+       * 批量删除菜单
+       */
+    void deleteBatch(List<Long> ids);
+
+     /**
+       * 查询菜单selectVO
+       */
+    List<SysMenuSelectVO> getMenuSelectVO();
+
+     /**
+       * 获取菜单详情
+       */
+    SysMenuVO info(Long menuId);
 }

@@ -14,6 +14,7 @@ import com.lyx.admin.ser.entity.SysUser;
 import com.lyx.admin.ser.entity.SysUserRole;
 import com.lyx.admin.ser.entity.req.SaveUserReq;
 import com.lyx.admin.ser.entity.req.UserListPageReq;
+import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysUserVO;
 import com.lyx.admin.ser.mapper.SysUserMapper;
 import com.lyx.admin.ser.service.*;
@@ -85,6 +86,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         SysUser user = new SysUser();
         BeanUtils.copyProperties(req,user);
         lambdaUpdate().eq(SysUser::getId,userId).update(user);
+        // 维护角色列表
+        userRoleService.deleteByUserId(userId);
+        saveUserRoles(req.getRoleIds(), userId);
     }
 
     /**
@@ -120,7 +124,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         AssertUtil.notEmpty(userId,ResultCode.USER_NOT_EXIST);
         return vo;
     }
-
 
     private void saveUserRoles(List<Long> roleIds, Long userId) {
         if (CollectionUtil.isNotEmpty(roleIds)) {

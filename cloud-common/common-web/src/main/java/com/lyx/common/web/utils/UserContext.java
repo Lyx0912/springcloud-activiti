@@ -2,8 +2,10 @@ package com.lyx.common.web.utils;
 
 
 import com.alibaba.cloud.commons.lang.StringUtils;
-import com.alibaba.fastjson.JSONObject;
 import com.lyx.common.base.constant.SecurityConstants;
+
+import com.nimbusds.jose.JWSObject;
+import net.minidev.json.JSONObject;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -22,15 +24,18 @@ public class UserContext {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         // 获取请求中的token
         String token = requestAttributes.getRequest().getHeader(SecurityConstants.AUTHORIZATION_KEY);
+        // 截取掉前缀
+        token = token.replace(SecurityConstants.JWT_PREFIX,"");
         if(!StringUtils.isEmpty(token)){
             try {
                 // 解析token
-                JSONObject jsonObject = (JSONObject) JSONObject.parse(URLDecoder.decode(token,"utf-8"));
+                JSONObject jsonObject = JWSObject.parse(token).getPayload().toJSONObject();
                 if(!Objects.isNull(jsonObject)){
-                    jsonObject.getLong("userId");
+                    return (Long) jsonObject.get("userId");
                 }
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
+//                throw new BizException(ResultCode.TOKEN_INVALID_OR_EXPIRED);
             }
         }
         return null;

@@ -4,11 +4,19 @@ package com.lyx.admin.ser.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lyx.admin.ser.config.AdminMapStruct;
+import com.lyx.admin.ser.config.ServiceConfig;
 import com.lyx.admin.ser.entity.SysPermission;
+import com.lyx.admin.ser.entity.req.SavePermissionReq;
+import com.lyx.admin.ser.entity.vo.SysPermissionVO;
+import com.lyx.admin.ser.entity.vo.SysServiceVO;
 import com.lyx.admin.ser.mapper.SysPermissionMapper;
 import com.lyx.admin.ser.service.ISysPermissionService;
 import com.lyx.common.base.constant.GlobalConstants;
+import com.lyx.common.base.result.ResultCode;
+import com.lyx.common.base.utils.AssertUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -27,8 +35,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements ISysPermissionService {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
+    private final AdminMapStruct adminMapStruct;
+    private final ServiceConfig serviceConfig;
 
     @Override
     public boolean refreshPermRolesRules() {
@@ -49,5 +58,77 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             }
         }
         return true;
+    }
+
+    /**
+     * 根据菜单查询权限
+     *
+     * @param menuId
+     */
+    @Override
+    public List<SysPermissionVO> listByMenuId(Long menuId) {
+        List<SysPermission> permissioms = lambdaQuery().eq(SysPermission::getMenuId, menuId).list();
+        if(CollectionUtil.isNotEmpty(permissioms)){
+            List<SysPermissionVO> sysPermissionVOS = adminMapStruct.sysPermission2SysPermissionVO(permissioms);
+            return sysPermissionVOS;
+        }
+        return null;
+    }
+
+    /**
+     * 新增权限
+     *
+     * @param req
+     */
+    @Override
+    public void createPermission(SavePermissionReq req) {
+        SysPermission permission = new SysPermission();
+        BeanUtils.copyProperties(req,permission);
+        // 拼接url
+        String permUrl = getPermUrl(req);
+        permission.setUrlPerm(permUrl);
+        save(permission);
+    }
+
+    /**
+     * 更新权限
+     *
+     * @param req
+     */
+    @Override
+    public void updatePermission(SavePermissionReq req) {
+        AssertUtil.notEmpty(req.getId(), ResultCode.PARAM_VALID_FAIL);
+        SysPermission permission = new SysPermission();
+        // 拼接url
+        String permUrl = getPermUrl(req);
+        permission.setUrlPerm(permUrl);
+        BeanUtils.copyProperties(req,permission);
+        updateById(permission);
+    }
+
+    /**
+     * 获取服务列表
+     */
+    @Override
+    public List<SysServiceVO> getServiceList() {
+        List<String> services = serviceConfig.getServices();
+        //校验服务列表的正确性
+        List<String> res = services.stream().filter(service -> {
+            return service.split(",").length == 2;
+        }).collect(Collectors.toList());
+        // 将服务转成SysServiceVO对象列表并返回
+        return res.stream().map(service->{
+            SysServiceVO vo = new SysServiceVO();
+            String[] arr = service.split(",");
+            vo.setServiceCode(arr[0]);
+            vo.setServiceName(arr[1]);
+            return vo;
+        }).collect(Collectors.toList());
+
+    }
+
+    private String getPermUrl(SavePermissionReq req) {
+        String permUrl = String.format(GlobalConstants.ADMIN_URL_PERM, req.getMethod(), req.getServiceName(), req.getUrl());
+        return permUrl;
     }
 }

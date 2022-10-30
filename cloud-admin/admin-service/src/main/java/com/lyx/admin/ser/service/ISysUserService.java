@@ -6,8 +6,10 @@ import com.lyx.admin.dto.UserAuthDTO;
 import com.lyx.admin.ser.entity.SysUser;
 import com.lyx.admin.ser.entity.req.SaveUserReq;
 import com.lyx.admin.ser.entity.req.UserListPageReq;
+import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysUserVO;
 import com.lyx.common.base.entity.PageUtils;
+import org.springframework.cloud.openfeign.FeignClient;
 
 import java.util.List;
 
@@ -51,6 +53,7 @@ public interface ISysUserService extends IService<SysUser> {
        * 获取当前用户inxi
        */
     SysUserVO currentUserInfo();
+
 
 //    /**
 //     * 更新用户状态

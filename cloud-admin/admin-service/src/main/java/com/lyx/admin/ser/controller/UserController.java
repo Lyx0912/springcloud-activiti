@@ -1,9 +1,11 @@
 package com.lyx.admin.ser.controller;
 
 import com.lyx.admin.dto.UserAuthDTO;
+import com.lyx.admin.ser.entity.SysMenu;
 import com.lyx.admin.ser.entity.SysUser;
 import com.lyx.admin.ser.entity.req.SaveUserReq;
 import com.lyx.admin.ser.entity.req.UserListPageReq;
+import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysUserVO;
 import com.lyx.admin.ser.service.ISysUserService;
 import com.lyx.common.base.entity.PageUtils;
@@ -12,8 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -43,7 +48,7 @@ public class UserController {
      * 获取用户信息
      */
     @GetMapping("/getByUserName/{username}")
-    public R<UserAuthDTO> getUserByUsername(@PathVariable String username) {
+    public R<UserAuthDTO> getUserByUsername(@NotBlank(message = "username can not be null!") @PathVariable String username) {
         UserAuthDTO user = sysUserService.getByUsername(username);
         return R.ok(user);
     }
@@ -52,7 +57,7 @@ public class UserController {
        * 创建用户(默认密码123456789)
        */
     @PostMapping
-    public R createUser(@RequestBody SaveUserReq req){
+    public R createUser(@Validated  @RequestBody SaveUserReq req){
         sysUserService.createUser(req);
         return R.ok();
     }
@@ -61,7 +66,7 @@ public class UserController {
        * 通过用户id获取用户详细信息
        */
     @GetMapping("/{userId}")
-    public R userDetail(@PathVariable Long userId){
+    public R userDetail(@NotBlank(message = "id can not be null!") @PathVariable Long userId){
         SysUserVO vo = sysUserService.userDetail(userId);
         return R.ok(vo);
     }
@@ -70,7 +75,7 @@ public class UserController {
        * 更新用户信息
        */
     @PutMapping("/{userId}")
-    public R update(@RequestBody SaveUserReq req,@PathVariable Long userId){
+    public R update(@Validated @RequestBody SaveUserReq req,@PathVariable Long userId){
         sysUserService.updateUserInfo(req,userId);
         return R.ok();
     }
@@ -79,7 +84,7 @@ public class UserController {
        * 批量刪除用戶
        */
     @DeleteMapping("/{userIds}")
-    public R deleteBatch(@PathVariable List<Long> userIds){
+    public R deleteBatch(@Size(min = 1,message = "用户编号不能为空") @PathVariable List<Long> userIds){
         sysUserService.removeByIds(userIds);
         return R.ok();
     }
@@ -94,11 +99,12 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public R updateStatus(@PathVariable Long userId,@RequestParam Integer status){
+    public R updateStatus(@NotBlank(message = "用户编号不能为空") @PathVariable Long userId,@NotBlank(message = "状态不能为空") @RequestParam Integer status){
         SysUser sysUser = new SysUser();
         sysUser.setId(userId);
         sysUser.setStatus(status);
         sysUserService.getBaseMapper().updateById(sysUser);
         return R.ok();
     }
+
 }

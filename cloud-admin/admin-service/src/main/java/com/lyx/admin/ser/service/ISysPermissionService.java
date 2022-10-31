@@ -33,4 +33,9 @@ public interface ISysPermissionService {
        * 获取服务列表
        */
      List<SysServiceVO> getServiceList();
+
+     /**
+       * 删除权限
+       */
+    void deletePermission(List<Long> ids);
 }

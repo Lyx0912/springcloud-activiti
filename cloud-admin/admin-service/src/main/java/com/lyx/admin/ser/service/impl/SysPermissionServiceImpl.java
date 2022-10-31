@@ -3,15 +3,18 @@ package com.lyx.admin.ser.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.admin.ser.config.AdminMapStruct;
 import com.lyx.admin.ser.config.ServiceConfig;
 import com.lyx.admin.ser.entity.SysPermission;
+import com.lyx.admin.ser.entity.SysRolePermission;
 import com.lyx.admin.ser.entity.req.SavePermissionReq;
 import com.lyx.admin.ser.entity.vo.SysPermissionVO;
 import com.lyx.admin.ser.entity.vo.SysServiceVO;
 import com.lyx.admin.ser.mapper.SysPermissionMapper;
 import com.lyx.admin.ser.service.ISysPermissionService;
+import com.lyx.admin.ser.service.ISysRolePermissionService;
 import com.lyx.common.base.constant.GlobalConstants;
 import com.lyx.common.base.result.ResultCode;
 import com.lyx.common.base.utils.AssertUtil;
@@ -38,6 +41,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     private final RedisTemplate redisTemplate;
     private final AdminMapStruct adminMapStruct;
     private final ServiceConfig serviceConfig;
+    private final ISysRolePermissionService rolePermissionService;
 
     @Override
     public boolean refreshPermRolesRules() {
@@ -82,6 +86,8 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
      */
     @Override
     public void createPermission(SavePermissionReq req) {
+        // 更新缓存中的权限信息
+        refreshPermRolesRules();
         SysPermission permission = new SysPermission();
         BeanUtils.copyProperties(req,permission);
         // 拼接url
@@ -97,6 +103,8 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
      */
     @Override
     public void updatePermission(SavePermissionReq req) {
+        // 更新缓存中的权限信息
+        refreshPermRolesRules();
         AssertUtil.notEmpty(req.getId(), ResultCode.PARAM_VALID_FAIL);
         SysPermission permission = new SysPermission();
         // 拼接url
@@ -125,6 +133,20 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             return vo;
         }).collect(Collectors.toList());
 
+    }
+
+    /**
+     * 删除权限
+     * @param ids
+     */
+    @Override
+    public void deletePermission(List<Long> ids) {
+        // 更新缓存中的权限信息
+        refreshPermRolesRules();
+        // 删除权限
+        removeByIds(ids);
+        // 删除关联表中的权限
+        rolePermissionService.lambdaUpdate().in(SysRolePermission::getPermissionId,ids).remove();
     }
 
     private String getPermUrl(SavePermissionReq req) {

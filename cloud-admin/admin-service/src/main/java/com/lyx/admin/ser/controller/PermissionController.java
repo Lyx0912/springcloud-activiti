@@ -60,4 +60,13 @@ public class PermissionController {
         permissionService.updatePermission(req);
         return R.ok();
     }
+
+    /**
+     * 删除权限
+     */
+    @DeleteMapping("/{ids}")
+    public R delete(@PathVariable List<Long> ids){
+        permissionService.deletePermission(ids);
+        return R.ok();
+    }
 }

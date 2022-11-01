@@ -1,5 +1,6 @@
 package com.lyx.admin.ser.service;
 
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SavePermissionReq;
 import com.lyx.admin.ser.entity.vo.SysPermissionVO;
 import com.lyx.admin.ser.entity.vo.SysServiceVO;
@@ -38,4 +39,9 @@ public interface ISysPermissionService {
        * 删除权限
        */
     void deletePermission(List<Long> ids);
+
+     /**
+       * 更新角色绑定的权限
+       */
+    void updateRoleBingdingInfo(Long roleId, CommonReq req);
 }

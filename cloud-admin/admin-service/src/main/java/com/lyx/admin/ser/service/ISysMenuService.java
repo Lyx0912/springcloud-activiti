@@ -2,6 +2,7 @@ package com.lyx.admin.ser.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyx.admin.ser.entity.SysMenu;
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SaveMenuReq;
 import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysMenuVO;
@@ -102,4 +103,9 @@ public interface ISysMenuService extends IService<SysMenu> {
        * 获取菜单详情
        */
     SysMenuVO info(Long menuId);
+
+     /**
+       * 更新角色绑定的菜单信息
+       */
+    void updateRoleBingdingInfo(Long roleId, CommonReq req);
 }

@@ -3,11 +3,14 @@ package com.lyx.admin.ser.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.admin.ser.entity.SysMenu;
+import com.lyx.admin.ser.entity.SysRoleMenu;
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SaveMenuReq;
 import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysMenuVO;
 import com.lyx.admin.ser.mapper.SysMenuMapper;
 import com.lyx.admin.ser.service.ISysMenuService;
+import com.lyx.admin.ser.service.ISysRoleMenuService;
 import com.lyx.common.base.constant.GlobalConstants;
 import com.lyx.common.base.result.ResultCode;
 import com.lyx.common.base.utils.AssertUtil;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
+
+    private final ISysRoleMenuService roleMenuService;
 
     @Override
     public void deletes(List<Long> ids) {
@@ -111,6 +116,29 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenuVO vo = new SysMenuVO();
         BeanUtils.copyProperties(menu,vo);
         return vo;
+    }
+
+    /**
+     * 更新角色绑定的菜单信息
+     *
+     * @param roleId
+     * @param req
+     */
+    @Override
+    public void updateRoleBingdingInfo(Long roleId, CommonReq req) {
+        // 删除指定角色绑定的菜单
+        roleMenuService.lambdaUpdate().in(SysRoleMenu::getRoleId,roleId).remove();
+        // 插入新的绑定信息
+        List<SysRoleMenu> sysRoleMenus = req.getIds().stream().map(id -> {
+            SysRoleMenu roleMenu = new SysRoleMenu();
+            roleMenu.setRoleId(roleId);
+            roleMenu.setMenuId(id);
+            return roleMenu;
+        }).collect(Collectors.toList());
+
+        if(CollectionUtil.isNotEmpty(sysRoleMenus)){
+            roleMenuService.saveBatch(sysRoleMenus);
+        }
     }
 
     /**

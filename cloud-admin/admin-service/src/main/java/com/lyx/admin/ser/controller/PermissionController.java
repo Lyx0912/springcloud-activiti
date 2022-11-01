@@ -1,5 +1,6 @@
 package com.lyx.admin.ser.controller;
 
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SavePermissionReq;
 import com.lyx.admin.ser.entity.vo.SysPermissionVO;
 import com.lyx.admin.ser.entity.vo.SysServiceVO;
@@ -67,6 +68,15 @@ public class PermissionController {
     @DeleteMapping("/{ids}")
     public R delete(@PathVariable List<Long> ids){
         permissionService.deletePermission(ids);
+        return R.ok();
+    }
+
+    /**
+     * 更新角色绑定的权限
+     */
+    @GetMapping("/role/{roleId}")
+    public R updateRoleBingdingInfo(@PathVariable Long roleId,@RequestBody CommonReq req){
+        permissionService.updateRoleBingdingInfo(roleId,req);
         return R.ok();
     }
 }

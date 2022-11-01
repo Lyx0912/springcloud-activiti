@@ -1,5 +1,6 @@
 package com.lyx.admin.ser.controller;
 
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SaveMenuReq;
 import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
 import com.lyx.admin.ser.entity.vo.SysMenuVO;
@@ -82,6 +83,24 @@ public class MenuController {
     public R info(@NotBlank(message = "菜单id不能为空") @PathVariable Long menuId){
         SysMenuVO vo = menuService.info(menuId);
         return R.ok(vo);
+    }
+
+    /**
+     * 更新菜单状态
+     */
+    @PatchMapping("/{id}/{status}")
+    public R updateMenuStatus(@PathVariable Long id,@PathVariable int status) {
+        menuService.updateMenuStatus(id,status);
+        return R.ok();
+    }
+
+     /**
+       * 更新角色绑定的菜单
+       */
+    @GetMapping("/role/{roleId}")
+    public R updateRoleBingdingInfo(@PathVariable Long roleId,@RequestBody CommonReq req){
+        menuService.updateRoleBingdingInfo(roleId,req);
+        return R.ok();
     }
 
 }

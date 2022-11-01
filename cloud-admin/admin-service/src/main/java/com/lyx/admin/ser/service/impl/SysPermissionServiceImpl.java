@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.admin.ser.config.AdminMapStruct;
 import com.lyx.admin.ser.config.ServiceConfig;
 import com.lyx.admin.ser.entity.SysPermission;
+import com.lyx.admin.ser.entity.SysRoleMenu;
 import com.lyx.admin.ser.entity.SysRolePermission;
+import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SavePermissionReq;
 import com.lyx.admin.ser.entity.vo.SysPermissionVO;
 import com.lyx.admin.ser.entity.vo.SysServiceVO;
@@ -147,6 +149,29 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         removeByIds(ids);
         // 删除关联表中的权限
         rolePermissionService.lambdaUpdate().in(SysRolePermission::getPermissionId,ids).remove();
+    }
+
+    /**
+     * 更新角色绑定的权限
+     *
+     * @param roleId
+     * @param req
+     */
+    @Override
+    public void updateRoleBingdingInfo(Long roleId, CommonReq req) {
+        // 删除指定角色绑定的菜单
+        rolePermissionService.lambdaUpdate().in(SysRolePermission::getRoleId,roleId).remove();
+        // 插入新的绑定信息
+        List<SysRolePermission> sysRoleMenus = req.getIds().stream().map(id -> {
+            SysRolePermission rolePermission = new SysRolePermission();
+            rolePermission.setRoleId(roleId);
+            rolePermission.setPermissionId(id);
+            return rolePermission;
+        }).collect(Collectors.toList());
+
+        if(CollectionUtil.isNotEmpty(sysRoleMenus)){
+            rolePermissionService.saveBatch(sysRoleMenus);
+        }
     }
 
     private String getPermUrl(SavePermissionReq req) {

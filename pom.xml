@@ -20,6 +20,7 @@
         <module>cloud-gateway</module>
         <module>cloud-demo</module>
         <module>cloud-activiti</module>
+        <module>cloud-attendance</module>
     </modules>
     <packaging>pom</packaging>
 

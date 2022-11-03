@@ -72,9 +72,18 @@ public class PermissionController {
     }
 
     /**
-     * 更新角色绑定的权限
+     * 查询角色绑定的权限
      */
     @GetMapping("/role/{roleId}")
+    public R<List<Long>> listRolePermission(@PathVariable Long roleId){
+        List<Long> permissions = permissionService.listRolePermission(roleId);
+        return R.ok(permissions);
+    }
+
+    /**
+     * 更新角色绑定的权限
+     */
+    @PutMapping("/role/{roleId}")
     public R updateRoleBingdingInfo(@PathVariable Long roleId,@RequestBody CommonReq req){
         permissionService.updateRoleBingdingInfo(roleId,req);
         return R.ok();

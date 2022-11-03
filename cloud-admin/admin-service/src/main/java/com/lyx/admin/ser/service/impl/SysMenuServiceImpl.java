@@ -48,7 +48,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public List<SysMenuVO> loadMenus() {
-        List<SysMenu> menus = lambdaQuery().orderByAsc(SysMenu::getSort).list();
+        List<SysMenu> menus = lambdaQuery().eq(SysMenu::getVisible, GlobalConstants.STATUS_ON).orderByAsc(SysMenu::getSort).list();
         if (CollectionUtil.isNotEmpty(menus)) {
             List<SysMenuVO> menuVOS = flushMenuVOs(menus, GlobalConstants.ROOT_MENU_ID);
             return menuVOS;
@@ -139,6 +139,17 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         if(CollectionUtil.isNotEmpty(sysRoleMenus)){
             roleMenuService.saveBatch(sysRoleMenus);
         }
+    }
+
+    /**
+     * 查询角色绑定的菜单
+     *
+     * @param roleId
+     */
+    @Override
+    public List<Long> listRoleMenu(Long roleId) {
+        List<SysRoleMenu> list = roleMenuService.lambdaQuery().eq(SysRoleMenu::getRoleId, roleId).list();
+        return list.stream().map(item->item.getMenuId()).collect(Collectors.toList());
     }
 
     /**

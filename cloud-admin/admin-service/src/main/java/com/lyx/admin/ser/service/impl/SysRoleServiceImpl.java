@@ -42,7 +42,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public void updateStatus(Long id, int status) {
-
+        SysRole role = new SysRole();
+        role.setId(id);
+        role.setStatus(status);
+        updateById(role);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         // 构建分页对象
         Page<SysRole> page = new Page<>(req.getPageNo(),req.getPageSize());
         LambdaQueryWrapper<SysRole> wrapper = Wrappers.lambdaQuery();
+        wrapper.orderByAsc(SysRole::getSort);
         if(!StringUtils.isEmpty(req.getKeyword())){
             wrapper.like(SysRole::getName,req.getKeyword());
         }

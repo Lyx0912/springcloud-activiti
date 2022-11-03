@@ -5,7 +5,6 @@ import com.lyx.admin.ser.entity.SysPermission;
 import com.lyx.admin.ser.entity.SysRolePermission;
 import com.lyx.admin.ser.mapper.SysPermissionMapper;
 import com.lyx.admin.ser.mapper.SysRolePermissionMapper;
-import com.lyx.admin.ser.service.ISysPermissionService;
 import com.lyx.admin.ser.service.ISysRolePermissionService;
 import org.springframework.stereotype.Service;
 

@@ -41,7 +41,7 @@ public class RoleController {
        * 分页查询角色
        */
     @GetMapping("/list")
-    public R list(@RequestBody RoleListPageReq req){
+    public R list(RoleListPageReq req){
         PageUtils<SysRoleVO> vos = roleService.listPage(req);
         return R.ok(vos);
     }
@@ -70,6 +70,12 @@ public class RoleController {
     @DeleteMapping("/{ids}")
     public R deleteRole(@PathVariable List<Long> ids){
         roleService.removeRole(ids);
+        return R.ok();
+    }
+
+    @PatchMapping("/{roleId}/{status}")
+    public R updateStatus(@PathVariable Long roleId,@PathVariable int status){
+        roleService.updateStatus(roleId,status);
         return R.ok();
     }
 }

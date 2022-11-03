@@ -94,10 +94,20 @@ public class MenuController {
         return R.ok();
     }
 
+
+    /**
+     * 查询角色绑定的菜单
+     */
+    @GetMapping("/role/{roleId}")
+    public R<List<Long>> listRoleMenu(@PathVariable Long roleId) {
+        List<Long> menuIds = menuService.listRoleMenu(roleId);
+        return R.ok(menuIds);
+    }
+
      /**
        * 更新角色绑定的菜单
        */
-    @GetMapping("/role/{roleId}")
+    @PutMapping("/role/{roleId}")
     public R updateRoleBingdingInfo(@PathVariable Long roleId,@RequestBody CommonReq req){
         menuService.updateRoleBingdingInfo(roleId,req);
         return R.ok();

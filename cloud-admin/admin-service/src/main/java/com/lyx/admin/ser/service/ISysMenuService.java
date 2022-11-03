@@ -108,4 +108,9 @@ public interface ISysMenuService extends IService<SysMenu> {
        * 更新角色绑定的菜单信息
        */
     void updateRoleBingdingInfo(Long roleId, CommonReq req);
+
+     /**
+       * 查询角色绑定的菜单
+       */
+    List<Long> listRoleMenu(Long roleId);
 }

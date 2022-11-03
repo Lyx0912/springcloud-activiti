@@ -10,8 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyx.admin.dto.UserAuthDTO;
 import com.lyx.admin.ser.config.AdminMapStruct;
-import com.lyx.admin.ser.entity.SysUser;
-import com.lyx.admin.ser.entity.SysUserRole;
+import com.lyx.admin.ser.entity.*;
 import com.lyx.admin.ser.entity.req.SaveUserReq;
 import com.lyx.admin.ser.entity.req.UserListPageReq;
 import com.lyx.admin.ser.entity.vo.SysMenuSelectVO;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author： 黎勇炫
@@ -43,6 +43,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private final ISysUserRoleService userRoleService;
     private final PasswordEncoder passwordEncoder;
     private final AdminMapStruct adminMapStruct;
+    private final ISysRoleMenuService sysRoleMenuService;
+    private final ISysRolePermissionService rolePermissionService;
+    private final ISysPermissionService permissionService;
 
     public UserAuthDTO getByUsername(String username) {
         UserAuthDTO userAuthInfo = this.baseMapper.getByUsername(username);
@@ -75,6 +78,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         BeanUtils.copyProperties(user,vo);
         // 查询用户绑定的角色id
         vo.setRoleIds(userRoleService.selectRoleIds(userId));
+        // 查询角色绑定的菜单
+        List<SysRoleMenu> roleMenus = sysRoleMenuService.lambdaQuery().in(SysRoleMenu::getRoleId, vo.getRoleIds()).list();
+        vo.setMenuIds(roleMenus.stream().map(item->item.getMenuId()).collect(Collectors.toList()));
+        // 查询角色绑定的权限
+        List<SysRolePermission> rolePermissions = rolePermissionService.lambdaQuery().in(SysRolePermission::getRoleId, vo.getRoleIds()).list();
+        List<Long> pid = rolePermissions.stream().map(item->item.getPermissionId()).collect(Collectors.toList());
+        // 根据权限id获取权限按钮名称
+        List<SysPermission> permissions = permissionService.lambdaQuery().in(SysPermission::getId, pid).list();
+        vo.setPermissions(new ArrayList<>(permissions.stream().map(item->item.getBtnSign()).collect(Collectors.toSet())));
         return vo;
     }
 

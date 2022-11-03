@@ -174,6 +174,17 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         }
     }
 
+    /**
+     * 查询角色绑定的权限
+     *
+     * @param roleId
+     */
+    @Override
+    public List<Long> listRolePermission(Long roleId) {
+        List<SysRolePermission> list = rolePermissionService.lambdaQuery().eq(SysRolePermission::getRoleId, roleId).list();
+        return list.stream().map(item->item.getPermissionId()).collect(Collectors.toList());
+    }
+
     private String getPermUrl(SavePermissionReq req) {
         String permUrl = String.format(GlobalConstants.ADMIN_URL_PERM, req.getMethod(), req.getServiceName(), req.getUrl());
         return permUrl;

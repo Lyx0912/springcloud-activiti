@@ -1,5 +1,8 @@
 package com.lyx.admin.ser.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.lyx.admin.ser.entity.SysPermission;
+import com.lyx.admin.ser.entity.SysRolePermission;
 import com.lyx.admin.ser.entity.req.CommonReq;
 import com.lyx.admin.ser.entity.req.SavePermissionReq;
 import com.lyx.admin.ser.entity.vo.SysPermissionVO;
@@ -11,7 +14,7 @@ import java.util.List;
  * @author 黎勇炫
  * @date 2022年10月10日 17:21
  */
-public interface ISysPermissionService {
+public interface ISysPermissionService extends IService<SysPermission> {
 
     boolean refreshPermRolesRules();
 
@@ -44,4 +47,9 @@ public interface ISysPermissionService {
        * 更新角色绑定的权限
        */
     void updateRoleBingdingInfo(Long roleId, CommonReq req);
+
+     /**
+       * 查询角色绑定的权限
+       */
+    List<Long> listRolePermission(Long roleId);
 }

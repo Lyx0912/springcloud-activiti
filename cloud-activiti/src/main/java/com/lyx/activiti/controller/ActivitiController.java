@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class ActivitiController {
 
-    @RequestMapping("/test")
+    @RequestMapping("/testGitee")
     public R test(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         System.out.println(authorization);

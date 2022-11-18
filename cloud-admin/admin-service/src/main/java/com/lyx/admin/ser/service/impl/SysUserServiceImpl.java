@@ -85,8 +85,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<SysRolePermission> rolePermissions = rolePermissionService.lambdaQuery().in(SysRolePermission::getRoleId, vo.getRoleIds()).list();
         List<Long> pid = rolePermissions.stream().map(item->item.getPermissionId()).collect(Collectors.toList());
         // 根据权限id获取权限按钮名称
-        List<SysPermission> permissions = permissionService.lambdaQuery().in(SysPermission::getId, pid).list();
-        vo.setPermissions(new ArrayList<>(permissions.stream().map(item->item.getBtnSign()).collect(Collectors.toSet())));
+        if(CollectionUtil.isNotEmpty(pid)){
+            List<SysPermission> permissions = permissionService.lambdaQuery().in(SysPermission::getId, pid).list();
+            vo.setPermissions(new ArrayList<>(permissions.stream().map(item->item.getBtnSign()).collect(Collectors.toSet())));
+        }
         return vo;
     }
 
@@ -110,8 +112,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public PageUtils<SysUserVO> pageUser(UserListPageReq req) {
-        // 构建分页对象
+        // 构建分页对象 设置分页参数
         Page<SysUser> page = new Page<>(req.getPageNo(),req.getPageSize());
+        // 构建查询条件
         LambdaQueryWrapper<SysUser> wrapper = Wrappers.lambdaQuery();
         if(!StringUtils.isEmpty(req.getKeyword())){
             wrapper.like(SysUser::getUsername,req.getKeyword()).or().like(SysUser::getNickname,req.getKeyword());

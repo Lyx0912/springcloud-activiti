@@ -1,6 +1,5 @@
 package com.lyx.activiti;
 
-import com.lyx.activiti.domain.Emp;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.TaskService;

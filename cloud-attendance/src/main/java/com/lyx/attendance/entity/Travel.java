@@ -1,6 +1,7 @@
 package com.lyx.attendance.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * @since 2022-11-03
  */
 @TableName("ATT_TRAVEL")
+@KeySequence(value = "ATT_LEAVE_SEQ",dbType = DbType.ORACLE)
 public class Travel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,12 +23,13 @@ public class Travel implements Serializable {
     /**
      * 出差编号
      */
-    private BigDecimal id;
+    @TableId(type = IdType.INPUT)
+    private Long id;
 
     /**
      * 用户id
      */
-    private BigDecimal userId;
+    private Long userId;
 
     /**
      * 出差时间
@@ -41,27 +44,44 @@ public class Travel implements Serializable {
     /**
      * 出差天数
      */
-    private BigDecimal travelDays;
+    private Integer travelDays;
 
     /**
      * 出差事由
      */
     private String travelReason;
 
-    public BigDecimal getId() {
+    /**
+     * 请假人姓名
+     */
+    private String uname;
+
+     /**
+       * 申请结果
+       */
+    private Integer result;
+
+     /**
+       * 流程实例编号
+       */
+    private String processInstance;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    public BigDecimal getUserId() {
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(BigDecimal userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -76,13 +96,15 @@ public class Travel implements Serializable {
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
-    public BigDecimal getTravelDays() {
+
+    public Integer getTravelDays() {
         return travelDays;
     }
 
-    public void setTravelDays(BigDecimal travelDays) {
+    public void setTravelDays(Integer travelDays) {
         this.travelDays = travelDays;
     }
+
     public String getTravelReason() {
         return travelReason;
     }
@@ -91,15 +113,27 @@ public class Travel implements Serializable {
         this.travelReason = travelReason;
     }
 
-    @Override
-    public String toString() {
-        return "Travel{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", startTime=" + startTime +
-            ", endTime=" + endTime +
-            ", travelDays=" + travelDays +
-            ", travelReason=" + travelReason +
-        "}";
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    public String getProcessInstance() {
+        return processInstance;
+    }
+
+    public void setProcessInstance(String processInstance) {
+        this.processInstance = processInstance;
+    }
+
+    public Integer getResult() {
+        return result;
+    }
+
+    public void setResult(Integer result) {
+        this.result = result;
     }
 }

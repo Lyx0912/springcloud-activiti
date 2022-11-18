@@ -23,4 +23,43 @@ public class SysPermissionVO implements Serializable {
 
     private String btnSign;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getUrlPerm() {
+        return urlPerm;
+    }
+
+    public void setUrlPerm(String urlPerm) {
+        this.urlPerm = urlPerm;
+    }
+
+    public String getBtnSign() {
+        return btnSign;
+    }
+
+    public void setBtnSign(String btnSign) {
+        this.btnSign = btnSign;
+    }
 }

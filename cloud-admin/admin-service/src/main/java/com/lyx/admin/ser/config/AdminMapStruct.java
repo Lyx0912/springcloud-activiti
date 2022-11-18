@@ -23,4 +23,6 @@ public interface AdminMapStruct {
     List<SysUserVO> sysUser2SysUserVO(List<SysUser> sysUsers);
 
     List<SysPermissionVO> sysPermission2SysPermissionVO(List<SysPermission> permissions);
+
+
 }

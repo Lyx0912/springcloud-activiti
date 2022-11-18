@@ -26,8 +26,9 @@ public enum ResultCode implements IResultCode, Serializable {
     FLOW_LIMITING("B0210", "系统限流"),
     DEGRADATION("B0220", "系统功能降级"),
     SERVICE_NO_AUTHORITY("B0221", "服务未授权"),
+    KEY_IS_DUPLICATED("C0221", "模型标识不能重复"),
+    PROCESS_NOT_EXIST("C0221", "该流程不存"),
     ;
-
     @Override
     public String getCode() {
         return code;

@@ -16,7 +16,6 @@ public class ActivitiController {
     @RequestMapping("/testGitee")
     public R test(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        System.out.println(authorization);
         return R.ok();
     }
 }

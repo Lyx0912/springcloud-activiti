@@ -78,7 +78,6 @@ public class ProcessDefinitionServiceImpl implements IProcessDefinitionService {
                 ProcessInfoVO vo = new ProcessInfoVO();
                 BeanUtils.copyProperties(pdl, vo);
                 vo.setStatus(pdl.isSuspended()==true?2:1);
-                System.out.println(vo.getStatus());
                 return vo;
             }).collect(Collectors.toList());
 

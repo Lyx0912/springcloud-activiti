@@ -59,7 +59,6 @@ public class ModelServiceImpl implements IModelService {
             List<ModelVO> vos = models.stream().map(model -> {
                 ModelVO vo = new ModelVO();
                 BeanUtils.copyProperties(model, vo);
-                System.out.println(vo);
                 return vo;
             }).collect(Collectors.toList());
             page.setList(vos);
